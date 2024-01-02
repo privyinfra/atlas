@@ -9,6 +9,6 @@ entries:
     name: atlas
     type: application
     urls:
-    - https://privyinfra.github.io/stable/atlas-1.0.0.tgz
+    - https://privyinfra.github.io/atlas/stable/atlas-1.0.0.tgz
     version: 1.0.0
 generated: "2024-01-02T14:09:24.20617211-04:00"
