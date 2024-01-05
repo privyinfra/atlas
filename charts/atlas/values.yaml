@@ -37,6 +37,8 @@ affinity: {}
 
 nameOverride: "atlas"
 fullnameOverride: "atlas"
+
+## Pods Lifecycle ##
 gracePeriodSeconds:
   enabled: true
   value: 60
@@ -97,19 +99,19 @@ liveness:
 
 service:
   type: ClusterIP
-  configs:
-    - name: http
-      port: 80
-      targetPort: 8000
-      protocol: TCP
-    - name: grpc
-      port: 80
-      targetPort: 8000
-      protocol: TCP
-    - name: http
-      port: 3000
-      targetPort: 3000
-      protocol: TCP
+  configs: {}
+    # - name: http
+    #   port: 80
+    #   targetPort: 8000
+    #   protocol: TCP
+    # - name: grpc
+    #   port: 80
+    #   targetPort: 8000
+    #   protocol: TCP
+    # - name: http
+    #   port: 3000
+    #   targetPort: 3000
+    #   protocol: TCP
   # Headless to load balance grpc service that have more than one pods
   headless: false
 
@@ -129,8 +131,8 @@ interceptor:
 ## Migration ##
 migrations:
   enabled: false
-  # type: pre-upgrade-job
-  type: init-container
+  type: pre-upgrade-job
+  # type: init-container
     # Init Container 
     # - "cd /go/src/atlas && ./main db:migrate"
     # Pre-Uprade-Job 
@@ -166,33 +168,33 @@ resources:
 ## you can modify ingress.rules freely
 ingress:
   enabled: false
-  configs:
-    - ingressName: "internal"
-      className: "internal-nginx"
-      rules:
-        - host: atlas.privyinfra.id
-          http:
-            paths:
-              - path: /rc(?:\/|$)(.*)
-                pathType: Prefix
-                backend:
-                  service:
-                    name: rc-atlas
-                    port:
-                      number: 80
-    - ingressName: "b2b-ingress"
-      className: "internal-nginx"
-      rules:
-        - host: atlas.privyinfra.id
-          http:
-            - path: /(.*)
-              pathType: Prefix
-              backend:
-                service:
-                  name: atlas
-                  port:
-                    number: 80
-  tls: []
+  configs: {}
+    # - ingressName: "internal"
+    #   className: "internal-nginx"
+    #   rules:
+    #     - host: atlas.privyinfra.id
+    #       http:
+    #         paths:
+    #           - path: /rc(?:\/|$)(.*)
+    #             pathType: Prefix
+    #             backend:
+    #               service:
+    #                 name: rc-atlas
+    #                 port:
+    #                   number: 80
+    # - ingressName: "b2b-ingress"
+    #   className: "internal-nginx"
+    #   rules:
+    #     - host: atlas.privyinfra.id
+    #       http:
+    #         - path: /(.*)
+    #           pathType: Prefix
+    #           backend:
+    #             service:
+    #               name: atlas
+    #               port:
+    #                 number: 80
+  # tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
