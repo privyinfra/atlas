@@ -42,7 +42,7 @@ gracePeriodSeconds:
   value: 60
 
 ## Namespace ##
-namespace: default
+namespace: {}
 
 ## Secret ##
 secrets:
@@ -165,7 +165,7 @@ resources:
 ## set true to ingress.external.enabled to enable external ingress
 ## you can modify ingress.rules freely
 ingress:
-  enabled: true
+  enabled: false
   configs:
     - ingressName: "internal"
       className: "internal-nginx"
