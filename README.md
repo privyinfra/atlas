@@ -108,18 +108,31 @@ autoscaling:
   averageUtilMem: 80
   averageUtilCpu: 80
 ingress:
-  internal:
-    enabled: true
+  enabled: true
+  configs:
+  - ingressName: "internal-ingress"
     className: "internal-nginx"
-  rules:
-    - host: atlas.geekinthecloud.xyz
-      http:
-        paths:
-          - path: /(.*)
+    rules:
+      - host: atlas.geekinthecloud.xyz
+        http:
+          paths:
+            - path: /rc(?:\/|$)(.)
+              pathType: Prefix
+              backend:
+                service:
+                  name: rc-atlas
+                  port:
+                    number: 80
+  - ingressName: "external-ingress"
+    className: "internal-nginx"
+    rules:
+      - host: atlas.geekinthecloud.xyz
+        http:
+          - path: /(.)
             pathType: Prefix
             backend:
               service:
-                name: atlas-example
+                name: atlas
                 port:
                   number: 80
 ```
