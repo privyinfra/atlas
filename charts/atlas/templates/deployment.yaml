@@ -34,6 +34,10 @@ spec:
       {{- if and .Values.migrations.enabled (eq .Values.migrations.type "init-container") }}
       initContainers:
         - name: {{ include "atlas.fullname" . }}-migrations
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+          {{- toYaml . | nindent 12 }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

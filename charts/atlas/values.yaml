@@ -65,7 +65,7 @@ secrets:
 ## Volumes ##
 ## Add google creds SA here
 ## google Creds names for RC is samilar with green releases
-volumes: {}
+volumes: 
   # example volume from secrets
   # - name: service-account
   #   secret:
@@ -74,7 +74,7 @@ volumes: {}
   # - name: data
   #   persistentVolumeClaim:
   #     claimName: volumes-pvc
-volumeMounts: {}
+volumeMounts:
   # example volume from secrets
   # - name: service-account
   #   mountPath: /mnt
@@ -131,8 +131,8 @@ interceptor:
 ## Migration ##
 migrations:
   enabled: false
-  type: pre-upgrade-job
-  # type: init-container
+  # type: pre-upgrade-job
+  type: init-container
     # Init Container 
     # - "cd /go/src/atlas && ./main db:migrate"
     # Pre-Uprade-Job 
