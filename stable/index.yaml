@@ -3,9 +3,19 @@ entries:
   atlas:
   - apiVersion: v2
     appVersion: production
-    created: "2024-01-05T16:24:07.662726+07:00"
+    created: "2024-02-03T00:32:41.819072+07:00"
     description: A Helm chart for Kubernetes
-    digest: de446874e02d8cb972d9a26bedf07d1dbb2d7f01c06c9aa65315b01bf5a2b5e2
+    digest: ce0c64d1ccba4dbcf8afcab2486d710d407e53ba3c48cdbf2428e64e4b49ea7b
+    name: atlas
+    type: application
+    urls:
+    - https://privyinfra.github.io/atlas/stable/atlas-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
+    appVersion: production
+    created: "2024-02-03T00:32:41.818228+07:00"
+    description: A Helm chart for Kubernetes
+    digest: 278adcfa49c52d661b31a0a1840055de75c681dda144b7aad96acae4b97d45fc
     name: atlas
     type: application
     urls:
@@ -13,7 +23,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: production
-    created: "2024-01-05T16:24:07.662044+07:00"
+    created: "2024-02-03T00:32:41.817264+07:00"
     description: A Helm chart for Kubernetes
     digest: f23920e5862083f4c869648afb985bec3565b81622bdf6c21a08d602ff5482d2
     name: atlas
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://privyinfra.github.io/atlas/stable/atlas-1.0.0.tgz
     version: 1.0.0
-generated: "2024-01-05T16:24:07.658761+07:00"
+generated: "2024-02-03T00:32:41.812926+07:00"
