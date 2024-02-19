@@ -132,10 +132,10 @@ Secret management
 #### resources Configuration Parameters
 |Name|Description|Value|
 | ------ | ------ | ------ | 
-|resources.limits.cpu |enabled autoscaling |400m|
-|resources.limits.memory |enabled autoscaling |256Mi|
-|resources.requests.cpu |enabled autoscaling |300m|
-|resources.requests.memory |enabled autoscaling |192Mi|
+|resources.limits.cpu |limit cpu usage  |400m|
+|resources.limits.memory |limit memory usage  |256Mi|
+|resources.requests.cpu |set request cpu |300m|
+|resources.requests.memory |set request memory |192Mi|
 
 #### ingress Configuration Parameters
 |Name|Description|Value|
@@ -150,12 +150,10 @@ Secret management
 | ------ | ------ | ------ | 
 |annotations.ingress |add annotation for ingress|[`detail`](#annotation-ingress-config-example)|
 |annotations.deployment |add annotation for deployment||
-|annotations.hpa |add annotation for deployment||
+|annotations.hpa |add annotation for hpa||
 |annotations.preupgradejob |add annotation for preupgradejob|[`detail`](#annotation-pre-upgrade-job-config-example)|
 |annotations.serviceaccount |add annotation for serviceaccount||
 |annotations.vault |add annotation for vault|[`detail`](#annotation-vault-config-example)|
-
-
 
 
 ### Parameter Detail
