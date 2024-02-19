@@ -54,6 +54,8 @@ Describe how users can customize and use your Helm Chart in their own projects. 
 |replicaCount|Number of App replicas to deploy|1|
 |volumes|mount sa / pvc to container, sometimes pair with volumeMounts|[`detail`](#volumes-config-example)|
 |volumeMounts|mount volume to destination path|[`detail`](#volumeMounts-config-example)|
+|hostAliases|add hostaliases for dns local|[`detail`](#hostAliases-config-example)|
+
 
 #### gracePeriodSeconds Configuration Parameters
 |Name|Description|Value|
@@ -140,7 +142,7 @@ Secret management
 | ------ | ------ | ------ | 
 |ingress.enabled |enabled ingress |false|
 |ingress.config |ingress config |[`datail`](#ingress-config-example)|
-|ingress.tls |ingress config |[`datail`](#ingress-tls-config-example)|
+|ingress.tls |ingress tls config |[`datail`](#ingress-tls-config-example)|
 
 
 #### annotations Configuration Parameters
@@ -153,10 +155,7 @@ Secret management
 |annotations.serviceaccount |add annotation for serviceaccount||
 |annotations.vault |add annotation for vault|[`detail`](#annotation-vault-config-example)|
 
-#### hostAliases Configuration Parameters
-|Name|Description|Value|
-| ------ | ------ | ------ | 
-|hostAliases|add hostaliases for dns local|[`detail`](#)|
+
 
 
 ### Parameter Detail
@@ -239,10 +238,22 @@ tls: []
 "helm.sh/hook-weight": "-5"
 "helm.sh/hook-delete-policy": hook-succeeded
 ```
+
 #### annotation vault config example
 ```
 "helm.sh/hook": pre-install,pre-upgrade
 "helm.sh/hook-weight": "-10"
+```
+
+#### hostAliases config example
+```
+- ip: "8.8.8.8"
+  hostnames:
+  - "google.com"
+  - "www.google.com"
+- ip: "1.1.1.1"
+  hostnames:
+  - "cloudflare.com"
 ```
 
 ### Example Deployments
