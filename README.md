@@ -52,6 +52,10 @@ Describe how users can customize and use your Helm Chart in their own projects. 
 |fullnameOverride|Override helm chart name|atlas|
 |namespace|The namespace in which the App will be created|""|
 |replicaCount|Number of App replicas to deploy|1|
+|volumes|mount sa / pvc to container, sometimes pair with volumeMounts|[`detail`](#volumes-config-example)|
+|volumeMounts|mount volume to destination path|[`detail`](#volumeMounts-config-example)|
+|hostAliases|add hostaliases for dns local|[`detail`](#hostAliases-config-example)|
+
 
 #### gracePeriodSeconds Configuration Parameters
 |Name|Description|Value|
@@ -63,32 +67,19 @@ Describe how users can customize and use your Helm Chart in their own projects. 
 Secret management
 |Name|Description|Value|
 | ------ | ------ | ------ | 
-|secrets.configs.enabled|Enable config|true|
+|secrets.configs.enabled|Enable config|false|
 |secrets.configs.path|Path config|secrets/configs/atlas-example|
-|secrets.configs.autorestart.enabled|Enable config auto restart|true|
-|secrets.creds.enabled|Enable creds|true|
+|secrets.configs.autorestart.enabled|Enable config auto restart|false|
+|secrets.creds.enabled|Enable creds|false|
 |secrets.creds.path|Path config|secrets/creds/atlas-example|
-|secrets.creds.autorestart.enabled|Enable config|true|
+|secrets.creds.autorestart.enabled|Enable config|false|
 
-#### volume Configuration Parameters
-For set up service account or volume, sometimes pair with `volumeMounts`
-|Name|Description|Value|
-| ------ | ------ | ------ | 
-|volume.name |Volume name||
-|volume.secret.secretName |If want to mount secret|atlas-sa|
-|volume.persistentVolumeClaim.claimName |If want to mount volume|volumes-pvc|
-
-#### volumeMounts Configuration Parameters
-|Name|Description|Value|
-| ------ | ------ | ------ | 
-|volumeMounts.name |volumeMounts name||
-|volume.mountPath |Path for volume inside container|/data|
 
 #### liveness Configuration Parameters
 |Name|Description|Value|
 | ------ | ------ | ------ | 
 |liveness.port |liveness port|8000|
-|liveness.type |type of liveness (httpGet| exec | tcpSocket)|tcpSocket|
+|liveness.type |type of liveness (httpGet | exec | tcpSocket)|tcpSocket|
 |liveness.path |declare liveness path for grpc (exec) and http (httpGet) only|/ping|
 |liveness.initialDelay|Amount of time before start check|30|
 |liveness.periodSeconds|Amount of time use to check|10|
@@ -99,7 +90,7 @@ For set up service account or volume, sometimes pair with `volumeMounts`
 |Name|Description|Value|
 | ------ | ------ | ------ | 
 |service.type |type of service|ClusterIP|
-|service.configs|config for service||
+|service.configs|config for service|[`detail`](#service-config-example)|
 |service.headless |enable headless if app service use GRPC protocol|false|
 
 #### imagePullSecrets Configuration Parameters
@@ -141,33 +132,127 @@ For set up service account or volume, sometimes pair with `volumeMounts`
 #### resources Configuration Parameters
 |Name|Description|Value|
 | ------ | ------ | ------ | 
-|resources.limits.cpu |enabled autoscaling |400m|
-|resources.limits.memory |enabled autoscaling |256Mi|
-|resources.requests.cpu |enabled autoscaling |300m|
-|resources.requests.memory |enabled autoscaling |192Mi|
+|resources.limits.cpu |limit cpu usage  |400m|
+|resources.limits.memory |limit memory usage  |256Mi|
+|resources.requests.cpu |set request cpu |300m|
+|resources.requests.memory |set request memory |192Mi|
 
-#### resources Configuration Parameters
+#### ingress Configuration Parameters
 |Name|Description|Value|
 | ------ | ------ | ------ | 
 |ingress.enabled |enabled ingress |false|
-|ingress.config |ingress config ||
+|ingress.config |ingress config |[`datail`](#ingress-config-example)|
+|ingress.tls |ingress tls config |[`datail`](#ingress-tls-config-example)|
+
 
 #### annotations Configuration Parameters
 |Name|Description|Value|
 | ------ | ------ | ------ | 
-|annotations.ingress |add annotation for ingress||
+|annotations.ingress |add annotation for ingress|[`detail`](#annotation-ingress-config-example)|
 |annotations.deployment |add annotation for deployment||
-|annotations.hpa |add annotation for deployment||
-|annotations.preupgradejob |add annotation for preupgradejob||
+|annotations.hpa |add annotation for hpa||
+|annotations.preupgradejob |add annotation for preupgradejob|[`detail`](#annotation-pre-upgrade-job-config-example)|
 |annotations.serviceaccount |add annotation for serviceaccount||
-|annotations.vault |add annotation for vault||
-
-#### hostAliases Configuration Parameters
-|Name|Description|Value|
-| ------ | ------ | ------ | 
-|hostAliases|add hostaliases for dns local||
+|annotations.vault |add annotation for vault|[`detail`](#annotation-vault-config-example)|
 
 
+### Parameter Detail
+#### volumes config example
+```
+- name: service-account
+  secret:
+    secretName: atlas-sa
+- name: data
+  persistentVolumeClaim:
+    claimName: volumes-pvc
+```
+#### volumeMounts config example
+```
+- name: service-account
+  mountPath: /mnt
+- name: data
+  mountPath: /data
+```
+#### service config example
+```
+- name: http
+  port: 80
+  targetPort: 8000
+  protocol: TCP
+- name: grpc
+  port: 80
+  targetPort: 8000
+  protocol: TCP
+- name: http
+  port: 3000
+  targetPort: 3000
+  protocol: TCP
+```
+
+#### ingress config example
+```
+- ingressName: "internal"
+  className: "internal-nginx"
+  rules:
+    - host: atlas.privyinfra.id
+      http:
+        paths:
+          - path: /rc(?:\/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: rc-atlas
+                port:
+                  number: 80
+- ingressName: "b2b-ingress"
+  className: "internal-nginx"
+  rules:
+    - host: atlas.privyinfra.id
+      http:
+        - path: /(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: atlas
+              port:
+```
+#### ingress tls config example
+```
+tls: []
+ - secretName: chart-example-tls
+   hosts:
+     - chart-example.local
+```
+
+#### annotation ingress config example
+```
+"nginx.ingress.kubernetes.io/proxy-body-size": "10M"
+"nginx.ingress.kubernetes.io/use-regex": "true"
+"nginx.org/client-max-body-size": "10M"
+```
+#### annotation pre upgrade job config example
+```
+"helm.sh/hook": pre-install,pre-upgrade
+"helm.sh/hook-weight": "-5"
+"helm.sh/hook-delete-policy": hook-succeeded
+```
+
+#### annotation vault config example
+```
+"helm.sh/hook": pre-install,pre-upgrade
+"helm.sh/hook-weight": "-10"
+```
+
+#### hostAliases config example
+```
+- ip: "8.8.8.8"
+  hostnames:
+  - "google.com"
+  - "www.google.com"
+- ip: "1.1.1.1"
+  hostnames:
+  - "cloudflare.com"
+```
 
 ### Example Deployments
 
